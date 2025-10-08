@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -44,5 +46,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class, 'owner_id');
+    }
+
+    public function leases(): BelongsToMany
+    {
+        return $this->belongsToMany(Property::class, 'leases', 'tenant_id', 'property_id')->withPivot(['start_date', 'end_date']);
     }
 }
