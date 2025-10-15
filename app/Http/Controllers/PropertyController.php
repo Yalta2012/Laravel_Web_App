@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Property;
+use App\Models\PropertyType;
+use App\Models\User;
+use App\Models\Address;
 
 class PropertyController extends Controller
 {
@@ -28,7 +31,15 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        //
+        return view('property_create',[
+            'owners' => User::all(),
+            'addresses' => Address::with([
+                'city:id,name,region_id',
+                'city.region:id,name,country_id',
+                'city.region.country:id,name'                
+            ])->get(),
+            'property_types' => PropertyType::all()
+        ]);
     }
 
     /**
@@ -36,7 +47,18 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|max:255',
+            'type_id' => 'integer',
+            'owner_id' => 'integer',
+            'address_id' => 'integer'
+        ]);
+
+        $validated['is_available'] = true;
+        $property = new Property($validated);
+        $property->save();
+        return redirect('/property');
     }
 
     /**
@@ -54,7 +76,16 @@ class PropertyController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return view('property_edit',[
+            'property' => Property::all()->where('id', $id)->first(),
+            'owners' => User::all(),
+            'addresses' => Address::with([
+                'city:id,name,region_id',
+                'city.region:id,name,country_id',
+                'city.region.country:id,name'                
+            ])->get(),
+            'property_types' => PropertyType::all()
+        ]);
     }
 
     /**
@@ -62,7 +93,23 @@ class PropertyController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'description' => 'required|max:255',
+            'type_id' => 'integer',
+            'owner_id' => 'integer',
+            'address_id' => 'integer',
+            'is_available' => 'required|boolean'
+        ]);
+        $property = Property::all()->where('id', $id)->first();
+        $property->title = $validated['title'];
+        $property->description = $validated['description'];
+        $property->type_id = $validated['type_id'];
+        $property->owner_id = $validated['owner_id'];
+        $property->address_id = $validated['address_id'];
+        $property->is_available = $validated['is_available'];
+        $property->save();
+        return redirect('/property');
     }
 
     /**
@@ -70,6 +117,7 @@ class PropertyController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Property::destroy($id);
+        return redirect('/property');
     }
 }

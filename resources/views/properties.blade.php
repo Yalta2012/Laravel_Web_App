@@ -18,6 +18,7 @@
             <td>Регион</td>
             <td>Страна</td>
             <td>Владелец</td>
+            <td>Действия</td>
 
         </thead>
         @foreach ($properties as $property)
@@ -31,7 +32,9 @@
                 <td>{{$property->address->city->name}}</td>                
                 <td>{{$property->address->city->region->name}}</td>                
                 <td>{{$property->address->city->region->country->name}}</td>                
-                <td>{{$property->owner->first_name." ".$property->owner->last_name}}</td>                
+                <td>{{$property->owner->first_name." ".$property->owner->last_name}}</td>
+                <td><a href="{{url('property/edit/'.$property->id)}}">Редактировать</a>           
+                <a href="{{url('property/destroy/'.$property->id)}}">Удалить</a></td>            
                
             </tr>
         @endforeach

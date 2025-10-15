@@ -22,7 +22,7 @@
                 <td>{{$tenant->last_name}}</td>
                 <td>{{$tenant->pivot->start_date}}</td>
                 <td>{{$tenant->pivot->end_date}}</td>
-
+                
             </tr>
         @endforeach
     </table>

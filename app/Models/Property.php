@@ -13,6 +13,15 @@ class Property extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description', 
+        'type_id',
+        'owner_id',
+        'address_id',
+        'is_available'
+    ];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
