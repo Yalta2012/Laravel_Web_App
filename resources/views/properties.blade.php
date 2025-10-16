@@ -39,6 +39,7 @@
             </tr>
         @endforeach
     </table>
+    {{ $properties->links() }}
 </body>
 </html>
 

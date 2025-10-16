@@ -13,8 +13,9 @@ class PropertyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $perpage = $request->perpage ?? 3;
         return view('properties',[
             'properties' => Property::with([
                 'property_type:id,name',
@@ -22,7 +23,7 @@ class PropertyController extends Controller
                 'address.city:id,name,region_id',
                 'address.city.region:id,name,country_id',
                 'address.city.region.country:id,name',
-            ])->get()
+            ])->paginate($perpage)->withQueryString()
         ]);
     }
 
