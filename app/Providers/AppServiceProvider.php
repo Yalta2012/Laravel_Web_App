@@ -4,6 +4,11 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Gate;
+// use App\Providers\User;
+use App\Models\User;
+use App\Models\Property;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,5 +26,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::defaultView('pagination::default');
+        Gate::define('destroy-property', function(User $user, Property $property){
+            return $user->is_admin;
+        });
     }
 }

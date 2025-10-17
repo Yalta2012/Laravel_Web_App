@@ -7,6 +7,7 @@ use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
 use App\Models\Address;
+use Illuminate\Support\Facades\Gate;
 
 class PropertyController extends Controller
 {
@@ -118,6 +119,11 @@ class PropertyController extends Controller
      */
     public function destroy(string $id)
     {
+        if(! Gate::allows('destroy-property', Property::all()->where('id', $id)->first())){
+            return redirect('/error')->with(
+                'message',
+                'У вас нет разрешения на удаление товара с id: '.$id);
+        }
         Property::destroy($id);
         return redirect('/property');
     }
