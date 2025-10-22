@@ -78,6 +78,12 @@ class PropertyController extends Controller
      */
     public function edit(string $id)
     {
+        if(! Gate::allows('edit-property', Property::all()->where('id', $id)->first())){
+            return redirect('/property')->withErrors([
+            'error' => 'У вас нет разрешения на редактирование товара с id: '.$id
+        ]);
+        }
+        
         return view('property_edit',[
             'property' => Property::all()->where('id', $id)->first(),
             'owners' => User::all(),
@@ -95,6 +101,7 @@ class PropertyController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
         $validated = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required|max:255',
@@ -120,11 +127,14 @@ class PropertyController extends Controller
     public function destroy(string $id)
     {
         if(! Gate::allows('destroy-property', Property::all()->where('id', $id)->first())){
-            return redirect('/error')->with(
-                'message',
-                'У вас нет разрешения на удаление товара с id: '.$id);
+
+            return back()->withErrors([
+            'error' => 'У вас нет разрешения на удаление товара с id: '.$id
+        ]);
         }
         Property::destroy($id);
-        return redirect('/property');
+        return redirect('/property')->WithErrors([
+            'success' => 'You have successfully deleted the record'
+        ]);
     }
 }

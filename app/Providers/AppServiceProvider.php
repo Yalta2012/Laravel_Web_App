@@ -26,6 +26,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::defaultView('pagination::default');
+        Gate::define('edit-property', function(User $user, Property $property){
+            return $user->is_admin OR $user->id == $property->owner_id;
+        });
         Gate::define('destroy-property', function(User $user, Property $property){
             return $user->is_admin;
         });

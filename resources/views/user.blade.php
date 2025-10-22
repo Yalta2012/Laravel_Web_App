@@ -1,69 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>609-31</title>
-</head>
-<body>
-    @if($user)
-    <h1>{{"Пользователь: ".$user->first_name." ".$user->last_name}}</h1>
-    <h2>Список арендованных помещений</h2>
-    <table border="1">
-        <thead>
-            <td>id</td>
-            <td>Название</td>
-            <td>Описание</td>
-            <td>Тип</td>
-            <td>Адрес</td>
-            <td>Город</td>
-            <td>Регион</td>
-            <td>Страна</td>
-            <td>Начало</td>
-            <td>Конец</td>
-        </thead>
-        @foreach ($user->leases as $lease)
-            <tr>
-                <td>{{$lease->id}}</td>
-                <td>{{$lease->title}}</td>
-                <td>{{$lease->description}}</td>
-                <td>{{$lease->property_type->name}}</td>
-                <td>{{$lease->address->street." ".$lease->address->house}}</td>
-                <td>{{$lease->address->city->name}}</td>
-                <td>{{$lease->address->city->region->name}}</td>
-                <td>{{$lease->address->city->region->country->name}}</td>
-                <td>{{$lease->pivot->start_date}}</td>
-                <td>{{$lease->pivot->end_date}}</td>
-            </tr>
-        @endforeach
-    </table>
+@extends('layout')
+@section('content')
 
-    <h2>Список имущества</h2>
-    <table border="1">
-        <thead>
-            <td>id</td>
-            <td>Название</td>
-            <td>Описание</td>
-            <td>Тип</td>
-            <td>Адрес</td>
-            <td>Город</td>
-            <td>Регион</td>
-            <td>Страна</td>
-        </thead>
-        @foreach ($user->properties as $property)
-            <tr>
-                <td>{{$property->id}}</td>
-                <td>{{$property->title}}</td>
-                <td>{{$property->description}}</td>
-                <td>{{$property->property_type->name}}</td>
-                <td>{{$property->address->street." ".$property->address->house}}</td>
-                <td>{{$property->address->city->name}}</td>                
-                <td>{{$property->address->city->region->name}}</td>                
-                <td>{{$property->address->city->region->country->name}}</td>                
-            </tr>
-        @endforeach
-    </table>
-    @else
-    <h2>Неверный id пользователя</h2>
-    @endif
-</body>
-</html>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    @if($user)
+                        <h2 class="card-title mb-0">Пользователь: {{ $user->first_name }} {{ $user->last_name }}</h2>
+                    @else
+                        <h2 class="card-title mb-0 text-danger">Неверный ID пользователя</h2>
+                    @endif
+                </div>
+                
+                @if($user)
+                <div class="card-body">
+                    <div class="mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">Список арендованных помещений</h4>
+                            <span class="badge bg-primary">{{ $user->leases->count() }}</span>
+                        </div>
+                        
+                        @if($user->leases->isNotEmpty())
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Название</th>
+                                        <th scope="col">Описание</th>
+                                        <th scope="col">Тип</th>
+                                        <th scope="col">Адрес</th>
+                                        <th scope="col">Город</th>
+                                        <th scope="col">Начало</th>
+                                        <th scope="col">Конец</th>
+                                        <th scope="col">Статус</th>
+                                        <th scope="col">Действия</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($user->leases as $lease)
+                                        <tr>
+                                            <td>{{ $lease->id }}</td>
+                                            <td>{{ $lease->title }}</td>
+                                            <td>{{ Str::limit($lease->description, 50) }}</td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ $lease->property_type->name }}</span>
+                                            </td>
+                                            <td>{{ $lease->address->street." ".$lease->address->house }}</td>
+                                            <td>{{ $lease->address->city->name }}</td>
+                                            <td>
+                                                <span class="badge bg-info text-dark">{{ $lease->pivot->start_date }}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ $lease->pivot->end_date ? 'bg-warning text-dark' : 'bg-success' }}">
+                                                    {{ $lease->pivot->end_date ?: 'Активно' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="badge {{ $lease->pivot->end_date ? 'bg-secondary' : 'bg-success' }}">
+                                                    {{ $lease->pivot->end_date ? 'Завершено' : 'Активная аренда' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ url('property/'.$lease->id) }}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+                                                    <a href="{{ url('lease/edit/'.$lease->id) }}" class="btn btn-sm btn-outline-primary">Редактировать</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @endif
+                    </div>
+
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="mb-0">Список имущества</h4>
+                            <span class="badge bg-success">{{ $user->properties->count() }}</span>
+                        </div>
+                        
+                        @if($user->properties->isNotEmpty())
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Название</th>
+                                        <th scope="col">Описание</th>
+                                        <th scope="col">Тип</th>
+                                        <th scope="col">Адрес</th>
+                                        <th scope="col">Город</th>
+                                        <th scope="col">Регион</th>
+                                        <th scope="col">Страна</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($user->properties as $property)
+                                        <tr>
+                                            <td>{{ $property->id }}</td>
+                                            <td>{{ $property->title }}</td>
+                                            <td>{{ Str::limit($property->description, 50) }}</td>
+                                            <td>
+                                                <span class="badge bg-secondary">{{ $property->property_type->name }}</span>
+                                            </td>
+                                            <td>{{ $property->address->street." ".$property->address->house }}</td>
+                                            <td>{{ $property->address->city->name }}</td>
+                                            <td>{{ $property->address->city->region->name }}</td>
+                                            <td>{{ $property->address->city->region->country->name }}</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ url('property/'.$property->id) }}" class="btn btn-sm btn-outline-primary">Подробнее</a>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @endif
+                    </div>
+                </div>
+                @else
+                <div class="card-body">
+                    <div class="alert alert-danger text-center">
+                        <i class="fas fa-exclamation-triangle"></i> Пользователь не найден
+                    </div>
+                    <div class="text-center">
+                        <a href="{{ url('/') }}" class="btn btn-primary">На главную</a>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
