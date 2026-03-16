@@ -25,8 +25,8 @@ Route::get('/hello', function () {
     return view('hello', ['title' => 'Привет, Мир!']);
 }); 
 
-Route::get('/address', [AddressController::class, 'index']); 
-Route::get('/address/{id}', [AddressController::class, 'show']);
+// Route::get('/address', [AddressController::class, 'index']); 
+// Route::get('/address/{id}', [AddressController::class, 'show']);
 
 
 Route::get('/city', [CityController::class, 'index']); 
@@ -37,23 +37,23 @@ Route::get('/country', [CountryController::class, 'index']);
 Route::get('/country/{id}', [CountryController::class, 'show']);
 
 
-Route::get('/property', [PropertyController::class, 'index']); 
+// Route::get('/property', [PropertyController::class, 'index']); 
 Route::post('/property', [PropertyController::class, 'store']);
 Route::get('/property/create', [PropertyController::class, 'create'])->middleware('auth');
 Route::get('/property/edit/{id}', [PropertyController::class, 'edit'])->middleware('auth');
 Route::post('/property/update/{id}', [PropertyController::class, 'update'])->middleware('auth');
 Route::get('/property/destroy/{id}', [PropertyController::class, 'destroy'])->middleware('auth');
-Route::get('/property/{id}', [PropertyController::class, 'show']); 
+// Route::get('/property/{id}', [PropertyController::class, 'show']); 
 
 
-Route::get('/property_type', [PropertyTypeController::class, 'index']); 
-Route::get('/property_type/{id}', [PropertyTypeController::class, 'show']); 
+// Route::get('/property_type', [PropertyTypeController::class, 'index']); 
+// Route::get('/property_type/{id}', [PropertyTypeController::class, 'show']); 
 
 
 Route::get('/region', [RegionController::class, 'index']); 
 Route::get('/region/{id}', [RegionController::class, 'show']); 
 
 
-Route::get('/user', [UserController::class, 'index']); 
-Route::get('/user/{id}', [UserController::class, 'show']); 
+// Route::get('/user', [UserController::class, 'index']); 
+// Route::get('/user/{id}', [UserController::class, 'show']); 
 

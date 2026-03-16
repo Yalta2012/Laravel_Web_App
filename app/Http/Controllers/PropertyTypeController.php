@@ -12,17 +12,7 @@ class PropertyTypeController extends Controller
      */
     public function index()
     {
-        return view('property_types',[
-            'property_types' => PropertyType::all()
-        ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return response(PropertyType::all());
     }
 
     /**
@@ -38,17 +28,7 @@ class PropertyTypeController extends Controller
      */
     public function show(string $id)
     {
-        return view ('property_type',[
-            'property_type' => PropertyType::all()->where('id', $id)->first()
-        ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return response(PropertyType::all()->find($id));
     }
 
     /**

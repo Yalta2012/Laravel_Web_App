@@ -12,12 +12,22 @@ class AddressController extends Controller
      */
     public function index()
     {
-        return response(Address::with([
+        return view('addresses',[
+            'addresses' => Address::with([
                 'city:id,name,region_id',
                 'city.region:id,name,country_id',
                 'city.region.country:id,name',
 
-            ])->get());
+            ])->get()
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -33,12 +43,17 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        return response(Address::with([
-                'city:id,name,region_id',
-                'city.region:id,name,country_id',
-                'city.region.country:id,name',
+        return view ('address',[
+            'address' => Address::all()->where('id', $id)->first()
+        ]);
+    }
 
-            ])->find($id));
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**

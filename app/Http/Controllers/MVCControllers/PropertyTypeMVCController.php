@@ -3,21 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Address;
+use App\Models\PropertyType;
 
-class AddressController extends Controller
+class PropertyTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response(Address::with([
-                'city:id,name,region_id',
-                'city.region:id,name,country_id',
-                'city.region.country:id,name',
+        return view('property_types',[
+            'property_types' => PropertyType::all()
+        ]);
+    }
 
-            ])->get());
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -33,12 +38,17 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        return response(Address::with([
-                'city:id,name,region_id',
-                'city.region:id,name,country_id',
-                'city.region.country:id,name',
+        return view ('property_type',[
+            'property_type' => PropertyType::all()->where('id', $id)->first()
+        ]);
+    }
 
-            ])->find($id));
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**

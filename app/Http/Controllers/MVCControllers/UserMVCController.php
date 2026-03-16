@@ -12,7 +12,17 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response(User::all());
+        return view('users',[
+            'users' => User::all()
+        ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -28,7 +38,9 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return response(User::with([
+        return view('user',[
+           // 'user' => User::all()->where('id', $id)->first()
+           'user' => User::with([
                 'leases.address:id,street,house,city_id',
                 'leases.address.city:id,name,region_id',
                 'leases.address.city.region:id,name,country_id',
@@ -38,7 +50,16 @@ class UserController extends Controller
                 'properties.address.city:id,name,region_id',
                 'properties.address.city.region:id,name,country_id',
                 'properties.address.city.region.country:id,name'
-            ])->find($id));
+            ])->where('id', $id)->first()
+        ]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
     }
 
     /**
