@@ -3,6 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\RegionController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\PropertyController;
@@ -13,9 +16,11 @@ use App\Http\Controllers\UserController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
-
-
 Route::get('/address', [AddressController::class, 'index']); 
+Route::get('/city', [CityController::class, 'index']); 
+Route::get('/region', [RegionController::class, 'index']); 
+Route::get('/country', [CountryController::class, 'index']); 
+
 Route::get('/address/{id}', [AddressController::class, 'show']);
 
 Route::get('/property_type', [PropertyTypeController::class, 'index']); 
@@ -33,6 +38,8 @@ Route::get('/leases_total', [LeaseController::class, 'total']);
 
 Route::group(['middleware' => ['auth:sanctum']],
             function(){
+                Route::post('/property', [PropertyController::class, 'store']);
+                Route::post('/property_type', [PropertyTypeController::class, 'store']);
                 Route::get('/user', function(Request $request){return $request->user();});
                 Route::get('/logout', [AuthController::class, 'logout']); 
             }

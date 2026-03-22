@@ -12,9 +12,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        return view('countries',[
-            'countries' => Country::all()
-        ]);
+        return response(Country::all());
     }
 
     /**
@@ -38,9 +36,7 @@ class CountryController extends Controller
      */
     public function show(string $id)
     {
-        return view ('country',[
-            'country' => Country::all()->where('id', $id)->first()
-        ]);
+        //
     }
 
     /**

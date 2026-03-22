@@ -32,5 +32,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('destroy-property', function(User $user, Property $property){
             return $user->is_admin;
         });
+        Gate::define('create-property-types', function(User $user){
+            return $user->is_admin;
+        });
+        Gate::define('create-property', function(User $user){
+            return true;
+        });
     }
 }

@@ -12,11 +12,8 @@ class RegionController extends Controller
      */
     public function index()
     {
-        return view('regions',[
-            'regions' => Region::with([
-                'country:id,name'
-            ])->get()
-        ]);
+        return response(Region::all());
+
     }
 
     /**
@@ -40,9 +37,7 @@ class RegionController extends Controller
      */
     public function show(string $id)
     {
-        return view('region',[
-            'region' => Region::all()->where('id',$id)->first()
-        ]);
+        //
     }
 
     /**

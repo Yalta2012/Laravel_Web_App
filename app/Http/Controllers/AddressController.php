@@ -12,12 +12,8 @@ class AddressController extends Controller
      */
     public function index()
     {
-        return response(Address::with([
-                'city:id,name,region_id',
-                'city.region:id,name,country_id',
-                'city.region.country:id,name',
+        return response(Address::all());
 
-            ])->get());
     }
 
     /**
@@ -33,12 +29,7 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        return response(Address::with([
-                'city:id,name,region_id',
-                'city.region:id,name,country_id',
-                'city.region.country:id,name',
-
-            ])->find($id));
+        //
     }
 
     /**

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PropertyType extends Model
 {
     use HasFactory;
-    
+    protected $fillable = [
+        'name'
+    ];
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class, 'type_id');

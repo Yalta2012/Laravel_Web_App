@@ -12,12 +12,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        return view('cities',[
-            'cities' => City::with([
-                'region:id,name,country_id',
-                'region.country:id,name',
-            ])->get()
-        ]);
+        return response(City::all());
     }
 
     /**
@@ -41,9 +36,7 @@ class CityController extends Controller
      */
     public function show(string $id)
     {
-        return view ('city',[
-            'city' => City::all()->where('id', $id)->first()
-        ]);
+        //
     }
 
     /**
