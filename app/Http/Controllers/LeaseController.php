@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Lease;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
 
 
 class LeaseController extends Controller
@@ -33,7 +34,7 @@ class LeaseController extends Controller
     }
 
     public function total(Request $request){
-        return response(Lease::all()->when($request->tenant_id, function(Builder $query, int $tenant_id){
+        return response(Lease::query()->when($request->tenant_id, function(Builder $query, int $tenant_id){
                 $query->where('tenant_id', $tenant_id);
             })->when($request->property_id, function(Builder $query, int $property_id){
                 $query->where('property_id', $property_id);

@@ -45,4 +45,32 @@ class AuthController extends Controller
             'message' => "Logged off"
         ]);
     }
+
+    public function register(Request $request){
+
+        $fields = $request->validate([
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string'
+            //'phone' => 'required|phone'         
+        ]);
+
+        $user = User::create([
+            'email' => $fields['email'],
+            'first_name' => $fields['first_name'],
+            'last_name' => $fields['last_name'],
+            'password' => Hash::make($fields['password']),
+            //'phone' => $fields['phone']
+        ]);
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+
+    }
 }
